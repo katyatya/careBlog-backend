@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  
+  userId        Int       @id @default(autoincrement()) @map("user_id")
+  fullName      String     @db.VarChar(40)
+  email         String     @db.VarChar(40) @unique
+  passwordHash String?    @db.VarChar(200) @map("password_hash")
+  avatarUrl     String?    @db.VarChar(200) @map("avatar_url")
+  createTimestamp DateTime @default(now()) @map("create_timestamp")
+  Post Post[]
+
+  Comment Comment[]
+
+  @@map("users")
+}
+
+model Post {
+  postId        Int       @id @default(autoincrement()) @map("post_id")
+  text          String     @db.VarChar(10000)
+  title         String     @db.VarChar(70)
+  tags          String[]   @db.Text @default([""]) @map("tags")
+  viewsCount    Int       @default(0) @map("views_count")
+  user          User      @relation(fields: [userId], references: [userId])
+  userId        Int       @map("user_id")
+  imageUrl      String?    @db.VarChar(100) @map("image_url")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  
+  @@map("posts")
+  Comment Comment[]
+}
+
+model Comment {
+  commentId   Int      @id @default(autoincrement()) @map("comment_id")
+  post        Post     @relation(fields: [postId], references: [postId])
+  postId      Int      @map("post_id")
+  user        User     @relation(fields: [userId], references: [userId])
+  userId      Int      @map("user_id")
+  commentText String   @map("comment_text")
+  createdAt   DateTime @default(now())
+  
+  @@map("comments")
+}
