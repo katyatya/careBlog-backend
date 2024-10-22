@@ -6,6 +6,7 @@ export default (req, res, next) => {
 		try {
 			const decoded = jwt.decode(token, 'secret123')
 			req.user_id = decoded.user_id
+			req.avatar_url = decoded.avatar_url
 			next()
 		} catch (err) {
 			return res.status(404).json({

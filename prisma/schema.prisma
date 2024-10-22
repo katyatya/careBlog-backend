@@ -10,7 +10,7 @@ datasource db {
 model User {
   
   userId        Int       @id @default(autoincrement()) @map("user_id")
-  fullName      String     @db.VarChar(40)
+  fullName      String     @db.VarChar(40) @map("full_name")
   email         String     @db.VarChar(40) @unique
   passwordHash String?    @db.VarChar(200) @map("password_hash")
   avatarUrl     String?    @db.VarChar(200) @map("avatar_url")
